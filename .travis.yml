@@ -9,6 +9,7 @@ env:
     - EMAIL='jdvelasq@unal.edu.co'
     - REPO='concept-proof-grade' 
     - GH_REPO='github.com/S{USER}/${REPO}.git' 
+    - FILENAME=${PWD##*/}.txt
 
 before_install:
   - docker network create proof-net
@@ -19,21 +20,19 @@ before_install:
 
 script:
   - docker run --rm --network=proof-net --volume="$(pwd)":/home  jdvelasq/jupyter-proof /bin/sh -c "cd home && ./gradetool  sql-grading.ipynb" > grade.txt
+  - cat ${FILENAME}
   - mv grade.txt ${PWD##*/}.txt
 
 
 after_success:
-
   - git config --global user.email "jdvelasq@unal.edu.co"
   - git config --global user.name "jdvelasq"
   - git clone --quiet https://jdvelasq:${GH_TOKEN}@github.com/jdvelasq/concept-proof-grade.git  ./repo
   - git remote add origin https://jdvelasq:${GH_TOKEN}@github.com/jdvelasq/concept-proof-grade.git
-  - git push origin master
-  - FILENAME=${PWD##*/}.txt
-  - mv ${FILENAME} ./repo/${FILENAME}.txt
+  - mv ${FILENAME} ./repo/${FILENAME}
   - cd repo
   - echo ${FILENAME}
-  - git add ${filename}
+  - git add ${FILENAME}
   - git commit -m "grading from Travis-CI"
   - git push origin master
   
