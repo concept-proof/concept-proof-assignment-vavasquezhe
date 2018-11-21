@@ -1,0 +1,25 @@
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - docker network create proof-net
+  - docker pull mysql:5
+  - docker pull jdvelasq/jupyter-proof
+  - docker run --rm --name proof-mysql --network=proof-net -e MYSQL_ROOT_PASSWORD=password -d mysql:5
+
+script:
+  - docker run --rm --network=proof-net --volume="$(pwd)":/home  jdvelasq/jupyter-proof /bin/sh -c "cd home && ./gradetool  sql-grading.ipynb" > grade.txt
+  - mv grade.txt ${PWD##*/}.txt
+
+
+after_success:
+  - # Set your identification.
+  - git config --global user.email "jdvelasq@unal.edu.co"
+  - git config --global user.name "jdvelasq"
+  - git clone https://jdvelasq:${GH_TOKEN}@github.com/concept-proof-grade.git ./repo
+  - mv ${PWD##*/}.txt ./repo/${PWD##*/}.txt
+  - cd repo
+  - git commit -m "grading from Travis-CI"
+  - git push

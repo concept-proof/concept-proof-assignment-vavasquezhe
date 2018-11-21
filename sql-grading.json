@@ -1,0 +1,104 @@
+{
+  "kernel": "python",
+  "grade": 0.0,
+  "cells": [
+    {
+      "source": "Concept Proof\n===\n\nEvaluation of a jupyter notebook in Travis CI using `gradetool`.",
+      "grade": false,
+      "cell_type": "markdown"
+    },
+    {
+      "source": "**Step 1.--** Load the sql extension",
+      "grade": false,
+      "cell_type": "markdown"
+    },
+    {
+      "source": "%load_ext sql",
+      "grade": false,
+      "cell_type": "code"
+    },
+    {
+      "source": "**Step 2.--** Connect to mysql server.",
+      "grade": false,
+      "cell_type": "markdown"
+    },
+    {
+      "source": "%sql mysql+pymysql://root:password@proof-mysql",
+      "grade": false,
+      "cell_type": "code"
+    },
+    {
+      "source": "**Step 3.--** Data preparation.",
+      "grade": false,
+      "cell_type": "markdown"
+    },
+    {
+      "source": "%%sql\nDROP DATABASE IF EXISTS conceptproof;\nCREATE DATABASE conceptproof;\n\nUSE conceptproof;\n\nCREATE TABLE data (\n    letter VARCHAR(3),\n    number INT\n);\n\nINSERT INTO data VALUES\n    (\"a\", 1),\n    (\"a\", 2),\n    (\"b\", 3),\n    (\"b\", 4);\n",
+      "grade": false,
+      "cell_type": "code"
+    },
+    {
+      "source": "**Step 4.-- Point 1.** Write a query returning the columns `letter`, in upper case and, and `number`.",
+      "grade": false,
+      "cell_type": "markdown"
+    },
+    {
+      "points": 5,
+      "source": null,
+      "grade": true,
+      "test": false,
+      "execution_count": 4,
+      "cell_type": "code",
+      "outputs": [
+        {
+          "name": "stdout",
+          "text": " * mysql+pymysql://root:***@proof-mysql\n4 rows affected.\n",
+          "output_type": "stream"
+        },
+        {
+          "metadata": {},
+          "data": {
+            "text/html": "<table>\n    <tr>\n        <th>UPPER(letter)</th>\n        <th>number</th>\n    </tr>\n    <tr>\n        <td>A</td>\n        <td>1</td>\n    </tr>\n    <tr>\n        <td>A</td>\n        <td>2</td>\n    </tr>\n    <tr>\n        <td>B</td>\n        <td>3</td>\n    </tr>\n    <tr>\n        <td>B</td>\n        <td>4</td>\n    </tr>\n</table>",
+            "text/plain": "[('A', 1), ('A', 2), ('B', 3), ('B', 4)]"
+          },
+          "output_type": "execute_result",
+          "execution_count": 4
+        }
+      ]
+    },
+    {
+      "source": "**Step 5.-- Point 2.** Write a query computing the sum of column `number` group by `letter`.",
+      "grade": false,
+      "cell_type": "markdown"
+    },
+    {
+      "points": 5,
+      "source": null,
+      "grade": true,
+      "test": false,
+      "execution_count": 5,
+      "cell_type": "code",
+      "outputs": [
+        {
+          "name": "stdout",
+          "text": " * mysql+pymysql://root:***@proof-mysql\n2 rows affected.\n",
+          "output_type": "stream"
+        },
+        {
+          "metadata": {},
+          "data": {
+            "text/html": "<table>\n    <tr>\n        <th>letter</th>\n        <th>SUM(number)</th>\n    </tr>\n    <tr>\n        <td>a</td>\n        <td>3</td>\n    </tr>\n    <tr>\n        <td>b</td>\n        <td>7</td>\n    </tr>\n</table>",
+            "text/plain": "[('a', Decimal('3')), ('b', Decimal('7'))]"
+          },
+          "output_type": "execute_result",
+          "execution_count": 5
+        }
+      ]
+    },
+    {
+      "source": "---",
+      "grade": false,
+      "cell_type": "markdown"
+    }
+  ]
+}
