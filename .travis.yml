@@ -27,8 +27,7 @@ script:
 after_success:
   - git config --global user.email "jdvelasq@unal.edu.co"
   - git config --global user.name "jdvelasq"
-  - git clone --quiet https://jdvelasq:${GH_TOKEN}@github.com/jdvelasq/concept-proof-grade.git  ./repo
-  - git remote add origin https://jdvelasq:${GH_TOKEN}@github.com/jdvelasq/concept-proof-grade.git
+  - git clone --quiet https://jdvelasq:${GITHUB_TOKEN}@github.com/jdvelasq/concept-proof-grade.git  ./repo
   - mv ${FILENAME} ./repo/${FILENAME}
   - cd repo
   - echo ${FILENAME}
