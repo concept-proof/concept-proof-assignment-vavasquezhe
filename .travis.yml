@@ -1,15 +1,21 @@
 sudo: required
 
-language: python
-
 services:
   - docker
+
+env:
+  global:
+    - USER='jdvelasq'
+    - EMAIL='jdvelasq@unal.edu.co'
+    - REPO='concept-proof-grade' 
+    - GH_REPO='github.com/S{USER}/${REPO}.git' 
 
 before_install:
   - docker network create proof-net
   - docker pull mysql:5
-  - docker pull jdvelasq/jupyter-proof
   - docker run --rm --name proof-mysql --network=proof-net -e MYSQL_ROOT_PASSWORD=password -d mysql:5
+  - docker pull jdvelasq/jupyter-proof
+  
 
 script:
   - docker run --rm --network=proof-net --volume="$(pwd)":/home  jdvelasq/jupyter-proof /bin/sh -c "cd home && ./gradetool  sql-grading.ipynb" > grade.txt
@@ -20,7 +26,8 @@ after_success:
   - # Set your identification.
   - git config --global user.email "jdvelasq@unal.edu.co"
   - git config --global user.name "jdvelasq"
-  - git clone https://jdvelasq:${GH_TOKEN}@github.com/concept-proof-grade.git ./repo
+  - git clone git://github.com/jdvelasq/concept-proof-grade.git  
+    https://jdvelasq:${GH_TOKEN}@github.com/concept-proof-grade.git ./repo
   - mv ${PWD##*/}.txt ./repo/${PWD##*/}.txt
   - cd repo
   - git commit -m "grading from Travis-CI"
