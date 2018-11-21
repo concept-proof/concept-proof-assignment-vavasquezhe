@@ -23,12 +23,17 @@ script:
 
 
 after_success:
-  - # Set your identification.
+
   - git config --global user.email "jdvelasq@unal.edu.co"
   - git config --global user.name "jdvelasq"
-  - git clone git://github.com/jdvelasq/concept-proof-grade.git  
-    https://jdvelasq:${GH_TOKEN}@github.com/concept-proof-grade.git ./repo
-  - mv ${PWD##*/}.txt ./repo/${PWD##*/}.txt
+  - git clone --quiet https://jdvelasq:${GH_TOKEN}@github.com/jdvelasq/concept-proof-grade.git  ./repo
+  - git remote add origin https://jdvelasq:${GH_TOKEN}@github.com/jdvelasq/concept-proof-grade.git
+  - git push origin master
+  - FILENAME=${PWD##*/}.txt
+  - mv ${FILENAME} ./repo/${FILENAME}.txt
   - cd repo
+  - echo ${FILENAME}
+  - git add ${filename}
   - git commit -m "grading from Travis-CI"
-  - git push
+  - git push origin master
+  
