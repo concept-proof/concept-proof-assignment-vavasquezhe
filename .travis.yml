@@ -20,9 +20,9 @@ before_install:
 
 script:
   - docker run --rm --network=proof-net --volume="$(pwd)":/home  jdvelasq/jupyter-proof /bin/sh -c "cd home && ./gradetool  sql-grading.ipynb" > grade.txt
-  - cat ${FILENAME}
   - mv grade.txt ${PWD##*/}.txt
-
+  - cat ${FILENAME}
+ 
 
 after_success:
   - git config --global user.email "jdvelasq@unal.edu.co"
